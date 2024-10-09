@@ -1,0 +1,51 @@
+#################################################################################################
+# Filename:  application.yaml
+#
+# You will need these VM options to run in your debugger or command-line
+#    -Djavax.net.ssl.trustStorePassword=changeit  -Djavax.net.ssl.trustStore=custom-oidc-provider/src/main/dev-resources/cacerts
+###################################################################################################
+
+
+###################################################################
+# Configure the Spring Security with a keystore and truststore
+###################################################################
+server:
+  port: 9444             # This custom oidc provider listens on port 9444
+  ssl:
+  key-store: keycloak/custom-oidc-provider/src/main/dev-resources/webapp.keystore.jks
+  key-store-password: changeit
+  key-store-type: JKS
+  trust-store: keycloak/custom-oidc-provider/src/main/dev-resources/webapp.truststore.jks
+  trust-store-password: changeit
+  trust-store-type: JKS
+  enabled: true
+  client-auth: want                   # I can talk with keycloak if set to "want" instead of "need"
+
+
+
+###################################################################
+# Configure the Spring Authorization Server
+###################################################################
+spring:
+  application:
+  name: authorization-server
+
+    security:
+  oauth2:
+    authorizationserver:
+    client:
+      oidc-client:
+      registration:
+        client-id: "oidc-client"
+        client-secret: "{noop}secret"
+        client-authentication-methods: "client_secret_post"           # possible values are "client_secret_basic" or "client_secret_post"
+        authorization-grant-types:
+        - "authorization_code"
+        - "refresh_token"
+          redirect-uris:
+        - "https://localhost.localdomain:8444/realms/MyRealm/broker/oidc/endpoint"
+          scopes:
+        - "openid"
+        - "profile"
+      require-authorization-consent: false
+
