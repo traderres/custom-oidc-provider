@@ -42,7 +42,7 @@ spring:
               authorization-grant-types:
                 - "authorization_code"
                 - "refresh_token"
-              redirect-uris:   "https://localhost.localdomain:8444/realms/MyRealm/broker/oidc/endpoint"
+              redirect-uris:   "https://localhost.localdomain2:8444/realms/MyRealm/broker/custom-oidc-provider/endpoint"
               scopes:
                 - "openid"
                 - "profile"
